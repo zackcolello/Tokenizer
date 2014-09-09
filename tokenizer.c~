@@ -1,6 +1,5 @@
 /*
  * tokenizer.c
- * hello world
  */
 #include <stdio.h>
 
