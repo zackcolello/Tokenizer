@@ -3,12 +3,16 @@
  * hello world
  */
 #include <stdio.h>
-
+#include <string.h>
 /*
  *  * Tokenizer type.  You need to fill in the type as part of your implementation.
  *   */
 
 struct TokenizerT_ {
+
+char* delimiters;
+char* input; 
+
 };
 
 typedef struct TokenizerT_ TokenizerT;
@@ -29,7 +33,33 @@ typedef struct TokenizerT_ TokenizerT;
 
 TokenizerT *TKCreate(char *separators, char *ts) {
 
-  return NULL;
+	int SeparatorSize = strlen(separators);
+	int StringSize = strlen(ts); 
+
+	printf("%s %s\n", separators, ts);
+	printf("Separator size is %d, and String Size is %d\n", SeparatorSize, StringSize);
+  
+	char* delims, *string;
+
+	delims = malloc(SeparatorSize +1);
+	string = malloc(StringSize +1);
+
+	strcpy(delims, separators);
+	strcpy(string, ts);
+
+	printf("Delim is %s, and String is %s\n", delims, string);
+
+	//TokenizerT.delimiters = malloc(SeparatorSize+1);
+	//TokenizerT.input = malloc(StringSize +1);
+
+  
+//	TokenizerT->delimiters = delims;
+//	TokenizerT->input = string;
+	
+//	printf("Toknizer delim is %s, and Tokenizer input is %s\n", TokenizerT->delimiters, TokenizerT->input);
+ 
+
+	return NULL;
 }
 
 /*
@@ -69,15 +99,13 @@ char *TKGetNextToken(TokenizerT *tk) {
 
 int main(int argc, char **argv) {
 
-char* delimiters;
-char* String;
-
 if (argc != 3){
 	printf("please enter two arguments after calling tokinizer: (1) delimiters (2) String to be tokenized.\n");
 	return -1;
 }
 
 
+TKCreate(argv[1], argv[2]);
 
 
 
