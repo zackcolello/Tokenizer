@@ -3,10 +3,13 @@
  * testestest hello world
  */
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+
 /*
  *  * Tokenizer type.  You need to fill in the type as part of your implementation.
  *   */
+
 
 struct TokenizerT_ {
 
@@ -16,6 +19,11 @@ char* input;
 };
 
 typedef struct TokenizerT_ TokenizerT;
+
+
+TokenizerT tokenizer;
+
+
 
 /*
  *  * TKCreate creates a new TokenizerT object for a given set of separator
@@ -35,9 +43,6 @@ TokenizerT *TKCreate(char *separators, char *ts) {
 
 	int SeparatorSize = strlen(separators);
 	int StringSize = strlen(ts); 
-
-	printf("%s %s\n", separators, ts);
-	printf("Separator size is %d, and String Size is %d\n", SeparatorSize, StringSize);
   
 	char* delims, *string;
 
@@ -53,13 +58,13 @@ TokenizerT *TKCreate(char *separators, char *ts) {
 	//TokenizerT.input = malloc(StringSize +1);
 
   
-//	TokenizerT->delimiters = delims;
-//	TokenizerT->input = string;
+	tokenizer.delimiters = delims;
+	tokenizer.input = string;
 	
-//	printf("Toknizer delim is %s, and Tokenizer input is %s\n", TokenizerT->delimiters, TokenizerT->input);
+	printf("tokenizer delim is %s, and tokenizer input is %s\n", tokenizer.delimiters, tokenizer.input);
  
 
-	return NULL;
+	return &tokenizer;
 }
 
 /*
@@ -86,6 +91,9 @@ void TKDestroy(TokenizerT *tk) {
 
 char *TKGetNextToken(TokenizerT *tk) {
 
+
+
+
   return NULL;
 }
 
@@ -99,13 +107,13 @@ char *TKGetNextToken(TokenizerT *tk) {
 
 int main(int argc, char **argv) {
 
-if (argc != 3){
-	printf("please enter two arguments after calling tokinizer: (1) delimiters (2) String to be tokenized.\n");
-	return -1;
-}
+	if (argc != 3){
+		printf("please enter two arguments after calling tokinizer: (1) delimiters (2) String to be tokenized.\n");
+		return -1;
+	}
 
 
-TKCreate(argv[1], argv[2]);
+	TKCreate(argv[1], argv[2]);
 
 
 
