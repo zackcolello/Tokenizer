@@ -22,8 +22,7 @@ typedef struct TokenizerT_ TokenizerT;
 
 
 TokenizerT tokenizer;
-
-
+char* GlobalString;
 
 /*
  *  * TKCreate creates a new TokenizerT object for a given set of separator
@@ -62,9 +61,10 @@ TokenizerT *TKCreate(char *separators, char *ts) {
 	tokenizer.input = string;
 	
 	printf("tokenizer delim is %s, and tokenizer input is %s\n", tokenizer.delimiters, tokenizer.input);
- 
 
-	return &tokenizer;
+	GlobalString = string; 
+
+		return &tokenizer;
 }
 
 /*
@@ -114,6 +114,11 @@ int main(int argc, char **argv) {
 
 
 	TKCreate(argv[1], argv[2]);
+
+
+
+
+	//printf("Global strang is now %s\n", GlobalString);
 
 
 
