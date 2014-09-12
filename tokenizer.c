@@ -8,6 +8,8 @@
 
 
 char *Translate (char *untranslated);
+char *indexPointer; //to be used to track where tokens are in the second argument
+
 
 /*
  *  * Tokenizer type.  You need to fill in the type as part of your implementation.
@@ -18,9 +20,6 @@ struct TokenizerT_ {
 
 char* delimiters;
 char* input; 
-int* indexPointer; //to be used to track where tokens are in the second argument
-
-
 };
 
 typedef struct TokenizerT_ TokenizerT;
@@ -51,7 +50,7 @@ TokenizerT *TKCreate(char *separators, char *ts) {
 	int StringSize = strlen(ts); 
   
 	char* delims, *string;
-
+ 
 	delims = malloc(SeparatorSize +1);
 	string = malloc(StringSize +1);
 
@@ -82,7 +81,10 @@ TokenizerT *TKCreate(char *separators, char *ts) {
 void TKDestroy(TokenizerT *tk) {
 }
 
-
+/*
+ * Translate takes in an untranslated text that may contain escape characters that need to be translated to ascii value.
+ *This function returns a translated version of the string to be used by TKCreate.
+ * */
 char *Translate (char *untranslated){	
 
 
@@ -102,12 +104,58 @@ char *Translate (char *untranslated){
  *           */
 
 char *TKGetNextToken(TokenizerT *tk) {
+	
+	int i, b;
+
+	char c;
+	char* BigBuffer; //to be used for returning tokens
+	BigBuffer = malloc(1000);
+	
+
+	for(i = 0; i<strlen(tokenizer.input); i++){
+	
+	//	c = tokenizer.input[i];
+	//	b = isDelimiter(&c);	
+
+		if(b == 0){
+		
+		}
+
+		printf("%c\n", tokenizer.input[i]);
+	
+		
+
+	}
 
 
-
-
-  return NULL;
+  return tokenizer.input;
 }
+
+
+/* Function isDelimiter is used by main to check if a character in the second argument is a delimiter.
+ * isDelimiter uses tokenizer's delimiters value to compare a character with those delimitervalues.
+ * It returns 1 if the character is in the delimiter string, and 0 otherwise.
+ * */
+int isDelimiter(char c){
+
+	int delimLength, i, b;
+	delimLength = strlen(tokenizer.delimiters);
+
+	printf("delim string length is %d\n", delimLength);
+
+	for(i = 0; i<strlen(tokenizer.delimiters); i++){ //cycle through delimiters to check against c
+		
+		b = strcmp(&tokenizer.delimiters[i], &c);
+			
+		if(b == 0){
+			return 1;	
+		}
+	}
+
+	return 0;
+
+}
+
 
 /*
  *  * main will have two string arguments (in argv[1] and argv[2]).
@@ -119,6 +167,7 @@ char *TKGetNextToken(TokenizerT *tk) {
 
 int main(int argc, char **argv) {
 
+
 	if (argc != 3){
 		printf("please enter two arguments after calling tokinizer: (1) delimiters (2) String to be tokenized.\n");
 		return -1;
@@ -127,13 +176,13 @@ int main(int argc, char **argv) {
 
 	TKCreate(argv[1], argv[2]);
 
+	indexPointer = tokenizer.input;
 
 
-
-	//printf("Global strang is now %s\n", GlobalString);
-
-
-
+	while (strlen(tokenizer.input) !=0){ //we decrease tokenizer.input as we call tkgetNextToken
+		
+		//printf("%s\n", TKGetNextToken(*tokenizer));
+	}
 
   return 0;
 }
