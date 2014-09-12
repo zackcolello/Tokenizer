@@ -55,7 +55,6 @@ TokenizerT *TKCreate(char *separators, char *ts) {
 	//TokenizerT.delimiters = malloc(SeparatorSize+1);
 	//TokenizerT.input = malloc(StringSize +1);
 
- 	//test 
 	tokenizer.delimiters = delims;
 	tokenizer.input = string;
 	
