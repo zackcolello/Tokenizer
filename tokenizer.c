@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-
+int isDelimiter (char c);
 char *Translate (char *untranslated);
 char *indexPointer; //to be used to track where tokens are in the second argument
 
@@ -41,10 +41,7 @@ TokenizerT tokenizer;
  *            * You need to fill in this function as part of your implementation.
  *             */
 
-
-
-
-TokenizerT *TKCreate(char *separators, char *ts) {
+ *TKCreate(char *separators, char *ts) {
 
 	int SeparatorSize = strlen(separators);
 	int StringSize = strlen(ts); 
@@ -62,11 +59,8 @@ TokenizerT *TKCreate(char *separators, char *ts) {
 	tokenizer.delimiters = Translate(delims);
 	tokenizer.input = Translate(string);
 
-
-	//tokenizer.delimiters = delims;
-	//tokenizer.input = string;
 	
-	printf("tokenizer delim is %s, and tokenizer input is %s\n", tokenizer.delimiters, tokenizer.input);
+//	printf("tokenizer delim is %s, and tokenizer input is %s\n", tokenizer.delimiters, tokenizer.input);
 
 		return &tokenizer;
 }
@@ -114,17 +108,18 @@ char *TKGetNextToken(TokenizerT *tk) {
 
 	for(i = 0; i<strlen(tokenizer.input); i++){
 	
-	//	c = tokenizer.input[i];
-	//	b = isDelimiter(&c);	
+		c = (tokenizer.input[i]);
+		b = isDelimiter(c);	//isDelimiter is now working yay!
 
-		if(b == 0){
+		printf("Just compared %c and delimiters.\n", c);
+		printf("boole is %d\n", b);
+
+//		if(b == 0){ //not delimiter, add to BigBuffer
 		
-		}
+//		}
 
-		printf("%c\n", tokenizer.input[i]);
+//		printf("%c\n", tokenizer.input[i]);
 	
-		
-
 	}
 
 
@@ -138,16 +133,20 @@ char *TKGetNextToken(TokenizerT *tk) {
  * */
 int isDelimiter(char c){
 
-	int delimLength, i, b;
-	delimLength = strlen(tokenizer.delimiters);
+	int delimLength, i;
+	float boole;
 
-	printf("delim string length is %d\n", delimLength);
+	delimLength = strlen(tokenizer.delimiters);
 
 	for(i = 0; i<strlen(tokenizer.delimiters); i++){ //cycle through delimiters to check against c
 		
-		b = strcmp(&tokenizer.delimiters[i], &c);
-			
-		if(b == 0){
+		boole = strcmp(&tokenizer.delimiters[i], &c);
+		
+		//printf("now comparing %c and %c\n", tokenizer.delimiters[i], c);
+		//printf("boole is %d\n", boole);
+	
+		if(boole == 0){
+
 			return 1;	
 		}
 	}
@@ -177,11 +176,16 @@ int main(int argc, char **argv) {
 	TKCreate(argv[1], argv[2]);
 
 	indexPointer = tokenizer.input;
+	char* String;
 
 
 	while (strlen(tokenizer.input) !=0){ //we decrease tokenizer.input as we call tkgetNextToken
+	
+		String = TKGetNextToken(&tokenizer); //unsure why & makes all these work, does not work without it
+	
+		printf("%s\n", String);
 		
-		//printf("%s\n", TKGetNextToken(*tokenizer));
+		break;//adding this here because I'm still working on how to properly end this loop
 	}
 
   return 0;
