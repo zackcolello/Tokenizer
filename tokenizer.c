@@ -6,6 +6,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+
+char *Translate (char *untranslated);
+
 /*
  *  * Tokenizer type.  You need to fill in the type as part of your implementation.
  *   */
@@ -15,6 +18,8 @@ struct TokenizerT_ {
 
 char* delimiters;
 char* input; 
+int* indexPointer; //to be used to track where tokens are in the second argument
+
 
 };
 
@@ -37,6 +42,9 @@ TokenizerT tokenizer;
  *            * You need to fill in this function as part of your implementation.
  *             */
 
+
+
+
 TokenizerT *TKCreate(char *separators, char *ts) {
 
 	int SeparatorSize = strlen(separators);
@@ -50,13 +58,14 @@ TokenizerT *TKCreate(char *separators, char *ts) {
 	strcpy(delims, separators);
 	strcpy(string, ts);
 
-	printf("Delim is %s, and String is %s\n", delims, string);
 
-	//TokenizerT.delimiters = malloc(SeparatorSize+1);
-	//TokenizerT.input = malloc(StringSize +1);
 
-	tokenizer.delimiters = delims;
-	tokenizer.input = string;
+	tokenizer.delimiters = Translate(delims);
+	tokenizer.input = Translate(string);
+
+
+	//tokenizer.delimiters = delims;
+	//tokenizer.input = string;
 	
 	printf("tokenizer delim is %s, and tokenizer input is %s\n", tokenizer.delimiters, tokenizer.input);
 
@@ -73,6 +82,13 @@ TokenizerT *TKCreate(char *separators, char *ts) {
 void TKDestroy(TokenizerT *tk) {
 }
 
+
+char *Translate (char *untranslated){	
+
+
+	return untranslated;	
+
+}
 /*
  *  * TKGetNextToken returns the next token from the token stream as a
  *   * character string.  Space for the returned token should be dynamically
