@@ -81,8 +81,87 @@ void TKDestroy(TokenizerT *tk) {
  * */
 char *Translate (char *untranslated){	
 
+	char *buff, *translated;
+	int i,k;
+	i=0;k=0;
+	buff = (char*) malloc(1000);
+	
+	while (untranslated[i]!='\0'){
+		
+		if (untranslated[i] == '\\'){
+			
+			switch (untranslated[i+1]){
+			
+			case 'n':
+			{
+				buff[k]='0x0a';
+				break;
+			}
+			case 't':
+			{
+				buff[k]='0x09';
+				break;
+			}
+			case 'v':
+			{
+				buff[k]='0x0b';
+				break;
+			}
+			case 'b':
+			{
+				buff[k]='0x08';
+				break;
+			}
+			case 'r':
+			{
+				buff[k]='0x0d';
+				break;
+			}
+			case 'f':
+			{
+				buff[k]='0x0c';
+				break;
+			}
+			case 'a':
+			{
+				buff[k]='0x07';
+				break;
+			}
+			case '\\':
+			{
+				buff[k]='0x5c';
+				break;
+			}
+			case '"':
+			{
+				buff[k]='0x22';
+			
+			}
+				break;
+			}
 
-	return untranslated;	
+			k++;
+			i+=2;
+
+			}else{
+	
+			buff[k]=untranslated[i];
+			k++;
+			i++;
+			}
+
+		}
+
+		i=0;	
+		translated= (char*)malloc((sizeof(buff))+1);
+		
+		while (buff[i] != '\0'){
+			translated[i] = buff[i];
+			i++;
+		}
+
+	return translated;
+
 
 }
 /*
@@ -99,31 +178,47 @@ char *Translate (char *untranslated){
 
 char *TKGetNextToken(TokenizerT *tk) {
 	
-	int i, b;
+	int i, b, BBIndex;
+	BBIndex = 0;
 
 	char c;
 	char* BigBuffer; //to be used for returning tokens
 	BigBuffer = malloc(1000);
 	
 
-	for(i = 0; i<strlen(tokenizer.input); i++){
+	for(i = 0; i<(strlen(tokenizer.input)+1); i++){
 	
 		c = (tokenizer.input[i]);
-		b = isDelimiter(c);	//isDelimiter is now working yay!
+		b = isDelimiter(c);	
 
-		printf("Just compared %c and delimiters.\n", c);
-		printf("boole is %d\n", b);
 
-//		if(b == 0){ //not delimiter, add to BigBuffer
+		if(c == '\0'){
 		
-//		}
+			BigBuffer[BBIndex] = '\0';
+			indexPointer = BigBuffer[BBIndex];
+			tokenizer.input = indexPointer;
+			return BigBuffer;
 
-//		printf("%c\n", tokenizer.input[i]);
-	
+		}
+		if(b == 0){ //not delimiter, add to BigBuffer
+			
+			BigBuffer[BBIndex] = c;
+			BBIndex++;
+			
+		}else{ //is delimiter, return now
+
+			
+			indexPointer = &tokenizer.input[i+1];
+			tokenizer.input = indexPointer;
+			
+		
+			return BigBuffer;
+		}
+
 	}
 
 
-  return tokenizer.input;
+  return NULL;
 }
 
 
@@ -142,9 +237,6 @@ int isDelimiter(char c){
 		
 		boole = strcmp(&tokenizer.delimiters[i], &c);
 		
-		//printf("now comparing %c and %c\n", tokenizer.delimiters[i], c);
-		//printf("boole is %d\n", boole);
-	
 		if(boole == 0){
 
 			return 1;	
@@ -173,19 +265,21 @@ int main(int argc, char **argv) {
 	}
 
 
+	// TKCreate(Translate(argv[1]), Translate(argv[2]));
+
 	TKCreate(argv[1], argv[2]);
+
 
 	indexPointer = tokenizer.input;
 	char* String;
 
-
-	while (strlen(tokenizer.input) !=0){ //we decrease tokenizer.input as we call tkgetNextToken
+	while (indexPointer != '\0'){ //we decrease tokenizer.input as we call tkgetNextToken
 	
 		String = TKGetNextToken(&tokenizer); //unsure why & makes all these work, does not work without it
-	
+		
 		printf("%s\n", String);
 		
-		break;//adding this here because I'm still working on how to properly end this loop
+	//	break;//adding this here because I'm still working on how to properly end this loop
 	}
 
   return 0;
