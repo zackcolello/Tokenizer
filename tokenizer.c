@@ -186,17 +186,25 @@ char *TKGetNextToken(TokenizerT *tk) {
 	BigBuffer = malloc(1000);
 	
 
-	for(i = 0; i<(strlen(tokenizer.input)+1); i++){
+	for(i = 0; i<(strlen(indexPointer)+1); i++){
+
 	
-		c = (tokenizer.input[i]);
+		c = (indexPointer[i]);
 		b = isDelimiter(c);	
+
 
 
 		if(c == '\0'){
 		
 			BigBuffer[BBIndex] = '\0';
+			
+
 			indexPointer = BigBuffer[BBIndex];
+			
 			tokenizer.input = indexPointer;
+		
+			//printf("indexPointer is now %s\n", indexPointer);
+
 			return BigBuffer;
 
 		}
@@ -210,7 +218,7 @@ char *TKGetNextToken(TokenizerT *tk) {
 			
 			indexPointer = &tokenizer.input[i+1];
 			tokenizer.input = indexPointer;
-			
+			BigBuffer[BBIndex] = '\0';
 		
 			return BigBuffer;
 		}
@@ -232,13 +240,12 @@ int isDelimiter(char c){
 	float boole;
 
 	delimLength = strlen(tokenizer.delimiters);
-
+	
 	for(i = 0; i<strlen(tokenizer.delimiters); i++){ //cycle through delimiters to check against c
 		
-		boole = strcmp(&tokenizer.delimiters[i], &c);
-		
-		if(boole == 0){
-
+	
+		if(tokenizer.delimiters[i] == c)
+		{
 			return 1;	
 		}
 	}
@@ -276,10 +283,14 @@ int main(int argc, char **argv) {
 	while (indexPointer != '\0'){ //we decrease tokenizer.input as we call tkgetNextToken
 	
 		String = TKGetNextToken(&tokenizer); //unsure why & makes all these work, does not work without it
+	
+		if(strlen(String) > 0){
+	
+			printf("'%s'\n", String);
 		
-		printf("%s\n", String);
-		
-	//	break;//adding this here because I'm still working on how to properly end this loop
+		}		
+
+
 	}
 
   return 0;
