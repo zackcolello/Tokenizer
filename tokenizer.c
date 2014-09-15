@@ -54,13 +54,8 @@ TokenizerT tokenizer;
 	strcpy(delims, separators);
 	strcpy(string, ts);
 
-
-
 	tokenizer.delimiters = Translate(delims);
 	tokenizer.input = Translate(string);
-
-	
-//	printf("tokenizer delim is %s, and tokenizer input is %s\n", tokenizer.delimiters, tokenizer.input);
 
 		return &tokenizer;
 }
@@ -83,7 +78,8 @@ char *Translate (char *untranslated){
 
 	char *buff, *translated;
 	int i,k;
-	i=0;k=0;
+	i=0;
+	k=0;
 	buff = (char*) malloc(1000);
 	
 	while (untranslated[i]!='\0'){
@@ -192,18 +188,14 @@ char *TKGetNextToken(TokenizerT *tk) {
 		c = (indexPointer[i]);
 		b = isDelimiter(c);	
 
-
-
 		if(c == '\0'){
 		
 			BigBuffer[BBIndex] = '\0';
 			
+			//indexPointer = BigBuffer[BBIndex];
+			indexPointer = '\0';			
 
-			indexPointer = BigBuffer[BBIndex];
-			
-			tokenizer.input = indexPointer;
-		
-			//printf("indexPointer is now %s\n", indexPointer);
+			//tokenizer.input = indexPointer;	
 
 			return BigBuffer;
 
@@ -282,15 +274,14 @@ int main(int argc, char **argv) {
 
 	while (indexPointer != '\0'){ //we decrease tokenizer.input as we call tkgetNextToken
 	
-		String = TKGetNextToken(&tokenizer); //unsure why & makes all these work, does not work without it
+		String = TKGetNextToken(&tokenizer); 
 	
 		if(strlen(String) > 0){
 	
 			printf("'%s'\n", String);
 		
 		}		
-
-
+//		free(String);
 	}
 
   return 0;
