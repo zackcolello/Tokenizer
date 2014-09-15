@@ -54,10 +54,10 @@ TokenizerT tokenizer;
 	strcpy(delims, separators);
 	strcpy(string, ts);
 
-	tokenizer.delimiters = delims;
-	tokenizer.input = string;
-	//tokenizer.delimiters = Translate(delims);
-	//tokenizer.input = Translate(string);
+	//tokenizer.delimiters = delims;
+	//tokenizer.input = string;
+	tokenizer.delimiters = Translate(delims);
+	tokenizer.input = Translate(string);
 
 		return &tokenizer;
 }
@@ -78,7 +78,7 @@ void TKDestroy(TokenizerT *tk) {
  * */
 char *Translate (char *untranslated){	
 
-	char *buff, *translated;
+	unsigned char *buff, *translated;
 	int i,k;
 	i=0;
 	k=0;
@@ -87,59 +87,65 @@ char *Translate (char *untranslated){
 	while (untranslated[i]!='\0'){
 		
 		if (untranslated[i] == '\\'){
-			
+
 			switch (untranslated[i+1]){
 			
-			case 'n':
-			{
-				buff[k]='0x0a';
-				break;
-			}
-			case 't':
-			{
-				buff[k]='0x09';
-				break;
-			}
-			case 'v':
-			{
-				buff[k]='0x0b';
-				break;
-			}
-			case 'b':
-			{
-				buff[k]='0x08';
-				break;
-			}
-			case 'r':
-			{
-				buff[k]='0x0d';
-				break;
-			}
-			case 'f':
-			{
-				buff[k]='0x0c';
-				break;
-			}
-			case 'a':
-			{
-				buff[k]='0x07';
-				break;
-			}
-			case '\\':
-			{
-				buff[k]='0x5c';
-				break;
-			}
-			case '"':
-			{
-				buff[k]='0x22';
-			
-			}
-				break;
-			}
-
-			k++;
-			i+=2;
+				case 'n':
+				{
+					buff[k] = '[';
+				//	buff[k+1] = '0x0a';
+					buff[k+1] = '0';
+					buff[k+2] = 'x';
+					buff[k+3] = '0';
+					buff[k+4] = 'a';
+					buff[k+5] = ']';
+					break;
+				}
+				case 't':
+				{
+					buff[k] = 0x09;
+					break;
+				}
+				case 'v':
+				{
+					buff[k] = 0x0b;
+					break;
+				}
+				case 'b':
+				{
+					buff[k] = 0x08;
+					break;
+				}
+				case 'r':
+				{
+					buff[k] = 0x0d;
+					break;
+				}
+				case 'f':
+				{
+					buff[k] = 0x0c;
+					break;
+				}
+				case 'a':
+				{
+					buff[k] = 0x07;
+					break;
+				}
+				case '\\':
+				{
+					buff[k] = 0x5c;
+					break;
+				}
+				case '"':
+				{
+					buff[k] = 0x22;
+				
+				}
+					break;
+				}
+	
+				k+=6;
+				i+=2;
 
 			}else{
 	
@@ -150,13 +156,9 @@ char *Translate (char *untranslated){
 
 		}
 
-		i=0;	
-		translated= (char*)malloc((sizeof(buff))+1);
-		
-		while (buff[i] != '\0'){
-			translated[i] = buff[i];
-			i++;
-		}
+		buff[k+1] = '\0';
+
+		translated = buff;
 
 	return translated;
 
@@ -273,6 +275,8 @@ int main(int argc, char **argv) {
 
 	indexPointer = tokenizer.input;
 	char* String;
+
+	printf("%s\n", tokenizer.input);
 
 	while (indexPointer != '\0'){ //we decrease tokenizer.input as we call tkgetNextToken
 	
