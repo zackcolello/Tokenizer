@@ -48,14 +48,16 @@ TokenizerT tokenizer;
   
 	char* delims, *string;
  
-	delims = malloc(SeparatorSize +1);
-	string = malloc(StringSize +1);
+	delims = (char*) malloc(SeparatorSize +1);
+	string = (char*) malloc(StringSize +1);
 
 	strcpy(delims, separators);
 	strcpy(string, ts);
 
-	tokenizer.delimiters = Translate(delims);
-	tokenizer.input = Translate(string);
+	tokenizer.delimiters = delims;
+	tokenizer.input = string;
+	//tokenizer.delimiters = Translate(delims);
+	//tokenizer.input = Translate(string);
 
 		return &tokenizer;
 }
@@ -179,7 +181,7 @@ char *TKGetNextToken(TokenizerT *tk) {
 
 	char c;
 	char* BigBuffer; //to be used for returning tokens
-	BigBuffer = malloc(1000);
+	BigBuffer = (char*) malloc(1000);
 	
 
 	for(i = 0; i<(strlen(indexPointer)+1); i++){
