@@ -56,8 +56,8 @@ TokenizerT tokenizer;
 
 	//tokenizer.delimiters = delims;
 	//tokenizer.input = string;
-	tokenizer.delimiters = Translate(delims);
-	tokenizer.input = Translate(string);
+	tokenizer.delimiters = (delims);
+	tokenizer.input = (string);
 
 		return &tokenizer;
 }
@@ -204,10 +204,14 @@ char *TKGetNextToken(TokenizerT *tk) {
 			return BigBuffer;
 
 		}
+
 		if(b == 0){ //not delimiter, add to BigBuffer
 			
+			if(c != '\\'){ //skip over "\"
 			BigBuffer[BBIndex] = c;
 			BBIndex++;
+			}
+
 			
 		}else{ //is delimiter, return now
 
@@ -215,7 +219,8 @@ char *TKGetNextToken(TokenizerT *tk) {
 			indexPointer = &tokenizer.input[i+1];
 			tokenizer.input = indexPointer;
 			BigBuffer[BBIndex] = '\0';
-		
+	
+	
 			return BigBuffer;
 		}
 
