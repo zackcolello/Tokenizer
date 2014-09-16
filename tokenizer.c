@@ -74,6 +74,10 @@ TokenizerT tokenizer;
  *      */
 
 void TKDestroy(TokenizerT *tk) {
+	
+	free(tokenizer.input);
+	//free(tokenizer.input);
+
 }
 
 /*
@@ -91,6 +95,10 @@ char *Translate (char *untranslated){
 	while (untranslated[i]!='\0'){
 		
 		if (untranslated[i] == '\\'){
+			if(untranslated[i+1] == '\0'){
+				break;
+			}
+
 
 			switch (untranslated[i+1]){
 			
@@ -137,11 +145,13 @@ char *Translate (char *untranslated){
 				case '"':
 				{
 					buff[k] = (char) 0x22;
-				
+					break;	
 				}
+				default:
+					buff[k] = untranslated[i+1];				
 					break;
 				}
-	
+				
 				k+=1;
 				i+=2;
 
@@ -157,7 +167,6 @@ char *Translate (char *untranslated){
 		buff[k+1] = '\0';
 
 		translated = buff;
-
 
 	return translated;
 
@@ -184,7 +193,70 @@ char *TranslateHexString (char *HexString){
 			BigBuffer[j+5] = ']';
 			j += 6;
 
-		
+		}else if(HexString[i] == (char) 0x09){
+			BigBuffer[j] = '[';
+			BigBuffer[j+1] = '0';
+			BigBuffer[j+2] = 'x';
+			BigBuffer[j+3] = '0';
+			BigBuffer[j+4] = '9';
+			BigBuffer[j+5] = ']';
+			j += 6;
+		}else if(HexString[i] == (char) 0x0b){
+			BigBuffer[j] = '[';
+			BigBuffer[j+1] = '0';
+			BigBuffer[j+2] = 'x';
+			BigBuffer[j+3] = '0';
+			BigBuffer[j+4] = 'b';
+			BigBuffer[j+5] = ']';
+			j += 6;
+		}else if(HexString[i] == (char) 0x08){
+			BigBuffer[j] = '[';
+			BigBuffer[j+1] = '0';
+			BigBuffer[j+2] = 'x';
+			BigBuffer[j+3] = '0';
+			BigBuffer[j+4] = '8';
+			BigBuffer[j+5] = ']';
+			j += 6;
+		}else if(HexString[i] == (char) 0x0d){
+			BigBuffer[j] = '[';
+			BigBuffer[j+1] = '0';
+			BigBuffer[j+2] = 'x';
+			BigBuffer[j+3] = '0';
+			BigBuffer[j+4] = 'd';
+			BigBuffer[j+5] = ']';
+			j += 6;
+		}else if(HexString[i] == (char) 0x0c){
+			BigBuffer[j] = '[';
+			BigBuffer[j+1] = '0';
+			BigBuffer[j+2] = 'x';
+			BigBuffer[j+3] = '0';
+			BigBuffer[j+4] = 'c';
+			BigBuffer[j+5] = ']';
+			j += 6;
+		}else if(HexString[i] == (char) 0x07){
+			BigBuffer[j] = '[';
+			BigBuffer[j+1] = '0';
+			BigBuffer[j+2] = 'x';
+			BigBuffer[j+3] = '0';
+			BigBuffer[j+4] = '7';
+			BigBuffer[j+5] = ']';
+			j += 6;
+		}else if(HexString[i] == (char) 0x5c){
+			BigBuffer[j] = '[';
+			BigBuffer[j+1] = '0';
+			BigBuffer[j+2] = 'x';
+			BigBuffer[j+3] = '5';
+			BigBuffer[j+4] = 'c';
+			BigBuffer[j+5] = ']';
+			j += 6;
+		}else if(HexString[i] == (char) 0x22){
+			BigBuffer[j] = '[';
+			BigBuffer[j+1] = '0';
+			BigBuffer[j+2] = 'x';
+			BigBuffer[j+3] = '2';
+			BigBuffer[j+4] = '2';
+			BigBuffer[j+5] = ']';
+			j += 6;
 		}else{		
 		
 			BigBuffer[j] = HexString[i];
@@ -242,6 +314,8 @@ char *TKGetNextToken(TokenizerT *tk) {
 
 	char c;
 	char* BigBuffer; //to be used for returning tokens
+
+
 	BigBuffer = (char*) malloc(1000);
 	
 
@@ -352,8 +426,12 @@ int main(int argc, char **argv) {
 			printf("'%s'\n", String);
 		
 		}		
-//		free(String);
+		free(String);
 	}
+
+	TKDestroy(&tokenizer);
+
+
 
   return 0;
 }
