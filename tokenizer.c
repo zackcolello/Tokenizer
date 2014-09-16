@@ -102,43 +102,43 @@ char *Translate (char *untranslated){
 				}
 				case 'v':
 				{
-					buff[k] = 0x0b;
+					buff[k] = (char) 0x0b;
 					break;
 				}
 				case 'b':
 				{
-					buff[k] = 0x08;
+					buff[k] = (char) 0x08;
 					break;
 				}
 				case 'r':
 				{
-					buff[k] = 0x0d;
+					buff[k] = (char) 0x0d;
 					break;
 				}
 				case 'f':
 				{
-					buff[k] = 0x0c;
+					buff[k] = (char) 0x0c;
 					break;
 				}
 				case 'a':
 				{
-					buff[k] = 0x07;
+					buff[k] = (char) 0x07;
 					break;
 				}
 				case '\\':
 				{
-					buff[k] = 0x5c;
+					buff[k] = (char) 0x5c;
 					break;
 				}
 				case '"':
 				{
-					buff[k] = 0x22;
+					buff[k] = (char) 0x22;
 				
 				}
 					break;
 				}
 	
-				k+=2;
+				k+=1;
 				i+=2;
 
 			}else{
@@ -275,7 +275,7 @@ int main(int argc, char **argv) {
 	indexPointer = tokenizer.input;
 	char* String;
 
-	printf("%s\n", tokenizer.input);
+	//printf("%s\n", tokenizer.input);
 
 	while (indexPointer != '\0'){ //we decrease tokenizer.input as we call tkgetNextToken
 	
