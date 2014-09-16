@@ -92,18 +92,12 @@ char *Translate (char *untranslated){
 			
 				case 'n':
 				{
-					buff[k] = '[';
-				//	buff[k+1] = '0x0a';
-					buff[k+1] = '0';
-					buff[k+2] = 'x';
-					buff[k+3] = '0';
-					buff[k+4] = 'a';
-					buff[k+5] = ']';
+					buff[k] = (char) 0x0a;
 					break;
 				}
 				case 't':
 				{
-					buff[k] = 0x09;
+					buff[k] =(char) 0x09;
 					break;
 				}
 				case 'v':
@@ -144,7 +138,7 @@ char *Translate (char *untranslated){
 					break;
 				}
 	
-				k+=6;
+				k+=2;
 				i+=2;
 
 			}else{
@@ -207,10 +201,10 @@ char *TKGetNextToken(TokenizerT *tk) {
 
 		if(b == 0){ //not delimiter, add to BigBuffer
 			
-			if(c != '\\'){ //skip over "\"
+			//if(c != '\\'){ //skip over "\"
 			BigBuffer[BBIndex] = c;
 			BBIndex++;
-			}
+			//}
 
 			
 		}else{ //is delimiter, return now
@@ -273,9 +267,9 @@ int main(int argc, char **argv) {
 	}
 
 
-	// TKCreate(Translate(argv[1]), Translate(argv[2]));
+	TKCreate(Translate(argv[1]), Translate(argv[2]));
 
-	TKCreate(argv[1], argv[2]);
+	//TKCreate(argv[1], argv[2]);
 
 
 	indexPointer = tokenizer.input;
