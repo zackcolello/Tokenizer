@@ -75,7 +75,7 @@ TokenizerT tokenizer;
 
 void TKDestroy(TokenizerT *tk) {
 	
-	free(tokenizer.input);
+//	free(tokenizer.input);
 	//free(tokenizer.input);
 
 }
@@ -95,10 +95,6 @@ char *Translate (char *untranslated){
 	while (untranslated[i]!='\0'){
 		
 		if (untranslated[i] == '\\'){
-			if(untranslated[i+1] == '\0'){
-				break;
-			}
-
 
 			switch (untranslated[i+1]){
 			
@@ -406,6 +402,8 @@ int main(int argc, char **argv) {
 		return -1;
 	}
 
+	printf("%s\n", argv[2]);	
+
 
 	TKCreate(Translate(argv[1]), Translate(argv[2]));
 
@@ -415,9 +413,7 @@ int main(int argc, char **argv) {
 	indexPointer = tokenizer.input;
 	char* String;
 
-	//printf("%s\n", tokenizer.input);
-
-	while (indexPointer != '\0'){ //we decrease tokenizer.input as we call tkgetNextToken
+		while (indexPointer != '\0'){ //we decrease tokenizer.input as we call tkgetNextToken
 	
 		String = TranslateHexString(TKGetNextToken(&tokenizer)); 
 	
