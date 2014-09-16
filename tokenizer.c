@@ -8,7 +8,11 @@
 
 int isDelimiter (char c);
 char *Translate (char *untranslated);
+char *TrimBuffer (char *buffer);
+char *TranslateHexString (char *HexString);
+
 char *indexPointer; //to be used to track where tokens are in the second argument
+
 
 
 /*
@@ -154,10 +158,71 @@ char *Translate (char *untranslated){
 
 		translated = buff;
 
+
 	return translated;
 
+}
+
+char *TranslateHexString (char *HexString){
+
+	char* BigBuffer;
+	BigBuffer = (char*) malloc(1000);
+
+	int i, j;
+	i = 0;
+	j = 0;
+
+
+	while(HexString[i] != '\0'){	
+
+		if(HexString[i] == (char) 0x0a){
+			BigBuffer[j] = '[';
+			BigBuffer[j+1] = '0';
+			BigBuffer[j+2] = 'x';
+			BigBuffer[j+3] = '0';
+			BigBuffer[j+4] = 'a';
+			BigBuffer[j+5] = ']';
+			j += 6;
+
+		
+		}else{		
+		
+			BigBuffer[j] = HexString[i];
+			j++;
+
+		}
+
+		i++;
+	}
+
+
+	return TrimBuffer(BigBuffer);
 
 }
+
+char *TrimBuffer (char *buffer){
+
+	int buffersize, i;
+	i = 0;
+	buffersize = strlen(buffer);
+	char* trimmed;
+	trimmed = (char*) malloc(buffersize +1);
+
+
+
+	while(buffer[i] != '\0'){
+		
+		trimmed[i] = buffer[i];
+		i++;
+
+	}	
+
+	trimmed[i] = '\0';
+
+	return trimmed;
+
+}
+
 /*
  *  * TKGetNextToken returns the next token from the token stream as a
  *   * character string.  Space for the returned token should be dynamically
@@ -195,7 +260,8 @@ char *TKGetNextToken(TokenizerT *tk) {
 
 			//tokenizer.input = indexPointer;	
 
-			return BigBuffer;
+			return TrimBuffer(BigBuffer);
+
 
 		}
 
@@ -213,9 +279,9 @@ char *TKGetNextToken(TokenizerT *tk) {
 			indexPointer = &tokenizer.input[i+1];
 			tokenizer.input = indexPointer;
 			BigBuffer[BBIndex] = '\0';
-	
-	
-			return BigBuffer;
+			
+
+			return TrimBuffer(BigBuffer);
 		}
 
 	}
@@ -279,7 +345,7 @@ int main(int argc, char **argv) {
 
 	while (indexPointer != '\0'){ //we decrease tokenizer.input as we call tkgetNextToken
 	
-		String = TKGetNextToken(&tokenizer); 
+		String = TranslateHexString(TKGetNextToken(&tokenizer)); 
 	
 		if(strlen(String) > 0){
 	
