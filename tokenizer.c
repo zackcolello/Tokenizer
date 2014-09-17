@@ -7,15 +7,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-int isDelimiter (char c);
-char *Translate (char *untranslated);
-char *TrimBuffer (char *buffer);
-char *TranslateHexString (char *HexString);
-
-char *indexPointer; //to be used to track where tokens are in the second argument
-
-
-
 /*
  *  * Tokenizer type.  You need to fill in the type as part of your implementation.
  *   */
@@ -29,7 +20,16 @@ char* input;
 typedef struct TokenizerT_ TokenizerT;
 
 
-TokenizerT tokenizer;
+int isDelimiter (char c, TokenizerT *tokenizer);
+char *Translate (char *untranslated);
+char *TrimBuffer (char *buffer);
+char *TranslateHexString (char *HexString);
+
+char *indexPointer; //to be used to track where tokens are in the second argument
+
+
+
+//TokenizerT tokenizer;
 
 /*
  *  * TKCreate creates a new TokenizerT object for a given set of separator
@@ -47,21 +47,30 @@ TokenizerT tokenizer;
 
 TokenizerT *TKCreate(char *separators, char *ts) {
 
+	TokenizerT *temptok;
+
 	int SeparatorSize = strlen(separators);
 	int StringSize = strlen(ts); 
+	
+	temptok = malloc(sizeof(TokenizerT));
+	temptok->delimiters = (char*) malloc(SeparatorSize +1);
+	temptok->input = (char*) malloc(StringSize +1);
   
 	char* delims, *string;
  
-	delims = (char*) malloc(SeparatorSize +1);
-	string = (char*) malloc(StringSize +1);
+	//delims = (char*) malloc(SeparatorSize +1);
+	//string = (char*) malloc(StringSize +1);
 
-	strcpy(delims, separators);
-	strcpy(string, ts);
 
-	tokenizer.delimiters = (delims);
-	tokenizer.input = (string);
+	strcpy(temptok->delimiters, separators);
+	strcpy(temptok->input, ts);
 
-		return &tokenizer;
+
+	//temptoktemptok->delimiters = delims;
+	//temptok->input = string;
+
+
+		return temptok;
 }
 
 /*
@@ -89,8 +98,6 @@ char *Translate (char *untranslated){
 	i=0;
 	k=0;
 	buff = (char*) malloc(1000);
-	
-	//can make buff smaller, length of untranslated
 	
 	while (untranslated[i]!='\0'){
 		
@@ -315,8 +322,8 @@ char *TrimBuffer (char *buffer){
  *           */
 
 char *TKGetNextToken(TokenizerT *tk) {
-	
-	int i, b, BBIndex;
+
+		int i, b, BBIndex;
 	BBIndex = 0;
 
 	char c;
@@ -330,7 +337,7 @@ char *TKGetNextToken(TokenizerT *tk) {
 
 	
 		c = (indexPointer[i]);
-		b = isDelimiter(c);	
+		b = isDelimiter(c, tk);	
 
 		if(c == '\0'){
 		
@@ -357,8 +364,8 @@ char *TKGetNextToken(TokenizerT *tk) {
 		}else{ //is delimiter, return now
 
 			
-			indexPointer = &tokenizer.input[i+1];
-			tokenizer.input = indexPointer;
+			indexPointer = &tk->input[i+1];
+			tk->input = indexPointer;
 			BigBuffer[BBIndex] = '\0';
 			
 
@@ -376,16 +383,16 @@ char *TKGetNextToken(TokenizerT *tk) {
  * isDelimiter uses tokenizer's delimiters value to compare a character with those delimiter values.
  * It returns 1 if the character is in the delimiter string, and 0 otherwise.
  * */
-int isDelimiter(char c){
+int isDelimiter(char c, TokenizerT *tokenizer){
 
 	int delimLength, i;
 
-	delimLength = strlen(tokenizer.delimiters);
+	delimLength = strlen(tokenizer->delimiters);
 	
-	for(i = 0; i<strlen(tokenizer.delimiters); i++){ //cycle through delimiters to check against c
+	for(i = 0; i<strlen(tokenizer->delimiters); i++){ //cycle through delimiters to check against c
 		
 	
-		if(tokenizer.delimiters[i] == c)
+		if(tokenizer->delimiters[i] == c)
 		{
 			return 1;	//character c is a delimiter, return 1 for true	
 		}
@@ -405,7 +412,8 @@ int isDelimiter(char c){
  *       */
 
 int main(int argc, char **argv) {
-
+	
+	TokenizerT *tokenizer;
 
 	if (argc != 3){
 		printf("please enter two arguments after calling tokinizer: (1) delimiters (2) String to be tokenized.\n");
@@ -415,14 +423,15 @@ int main(int argc, char **argv) {
 	printf("%s\n", argv[2]);	
 
 
-	 TKCreate(Translate(argv[1]), Translate(argv[2]));
+	tokenizer = TKCreate(Translate(argv[1]), Translate(argv[2]));
 
-	indexPointer = tokenizer.input; //indexPointer now holds the input string to be used in while loop
+	indexPointer = tokenizer->input; //indexPointer now holds the input string to be used in while loop
 	char* String;
 
 		while (indexPointer != '\0'){ //We traverse tokenizer.input with indexPointer as we call TKGetNextToken
 	
-		String = TranslateHexString(TKGetNextToken(&tokenizer)); 
+		String = TranslateHexString(TKGetNextToken(tokenizer)); 
+
 	
 		if(strlen(String) > 0){ //ensure we do not print blank tokens
 	
@@ -432,7 +441,7 @@ int main(int argc, char **argv) {
 		free(String);
 	}
 
-		TKDestroy(&tokenizer);
+		TKDestroy(tokenizer);
 
 
 
