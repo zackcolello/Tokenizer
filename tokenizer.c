@@ -1,7 +1,8 @@
 /*
  * tokenizer.c
- * testestest hello world
+ * Written by Zack Colello and Anna Genke
  */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -18,7 +19,6 @@ char *indexPointer; //to be used to track where tokens are in the second argumen
 /*
  *  * Tokenizer type.  You need to fill in the type as part of your implementation.
  *   */
-
 
 struct TokenizerT_ {
 
@@ -45,7 +45,7 @@ TokenizerT tokenizer;
  *            * You need to fill in this function as part of your implementation.
  *             */
 
- *TKCreate(char *separators, char *ts) {
+TokenizerT *TKCreate(char *separators, char *ts) {
 
 	int SeparatorSize = strlen(separators);
 	int StringSize = strlen(ts); 
@@ -58,8 +58,6 @@ TokenizerT tokenizer;
 	strcpy(delims, separators);
 	strcpy(string, ts);
 
-	//tokenizer.delimiters = delims;
-	//tokenizer.input = string;
 	tokenizer.delimiters = (delims);
 	tokenizer.input = (string);
 
@@ -75,8 +73,8 @@ TokenizerT tokenizer;
 
 void TKDestroy(TokenizerT *tk) {
 	
+	//free(tokenizer.delimiters);
 //	free(tokenizer.input);
-	//free(tokenizer.input);
 
 }
 
@@ -92,9 +90,11 @@ char *Translate (char *untranslated){
 	k=0;
 	buff = (char*) malloc(1000);
 	
+	//can make buff smaller, length of untranslated
+	
 	while (untranslated[i]!='\0'){
 		
-		if (untranslated[i] == '\\'){
+		if (untranslated[i] == '\\'){ //Found backslash, check through list of known escape characters
 
 			switch (untranslated[i+1]){
 			
@@ -164,9 +164,15 @@ char *Translate (char *untranslated){
 
 		translated = buff;
 
+
 	return translated;
 
 }
+
+/*Function TranslateHexString takes in a string argument that may contain literal hex values (such as a new line character)
+ * and replaces those hex characters with their ascii value (ex: [0x0a]) as a string. 
+ *It then returns a call to TrimBuffer, passing the now translated string as an argument. 
+ */
 
 char *TranslateHexString (char *HexString){
 
@@ -174,8 +180,8 @@ char *TranslateHexString (char *HexString){
 	BigBuffer = (char*) malloc(1000);
 
 	int i, j;
-	i = 0;
-	j = 0;
+	i = 0; //index for HexString
+	j = 0; //index for BigBuffer
 
 
 	while(HexString[i] != '\0'){	
@@ -253,7 +259,7 @@ char *TranslateHexString (char *HexString){
 			BigBuffer[j+4] = '2';
 			BigBuffer[j+5] = ']';
 			j += 6;
-		}else{		
+		}else{		//Value at HexString[i] was not an escape character, copy character to BigBuffer as normal
 		
 			BigBuffer[j] = HexString[i];
 			j++;
@@ -267,6 +273,11 @@ char *TranslateHexString (char *HexString){
 	return TrimBuffer(BigBuffer);
 
 }
+
+
+/*Function TrimBuffer takes in a character array that may contain extra space, and cuts out the extra space to ensure the 
+ * string has no extra characters. TrimBuffer returns a char* of the newly trimmed input.
+ */
 
 char *TrimBuffer (char *buffer){
 
@@ -357,18 +368,17 @@ char *TKGetNextToken(TokenizerT *tk) {
 	}
 
 
-  return NULL;
+  return 0;
 }
 
 
 /* Function isDelimiter is used by main to check if a character in the second argument is a delimiter.
- * isDelimiter uses tokenizer's delimiters value to compare a character with those delimitervalues.
+ * isDelimiter uses tokenizer's delimiters value to compare a character with those delimiter values.
  * It returns 1 if the character is in the delimiter string, and 0 otherwise.
  * */
 int isDelimiter(char c){
 
 	int delimLength, i;
-	float boole;
 
 	delimLength = strlen(tokenizer.delimiters);
 	
@@ -377,11 +387,11 @@ int isDelimiter(char c){
 	
 		if(tokenizer.delimiters[i] == c)
 		{
-			return 1;	
+			return 1;	//character c is a delimiter, return 1 for true	
 		}
 	}
 
-	return 0;
+	return 0;	//character c was not found to be a delimiter. Return 0 for false
 
 }
 
@@ -401,23 +411,20 @@ int main(int argc, char **argv) {
 		printf("please enter two arguments after calling tokinizer: (1) delimiters (2) String to be tokenized.\n");
 		return -1;
 	}
-
+	printf("%s\n", argv[1]);
 	printf("%s\n", argv[2]);	
 
 
-	TKCreate(Translate(argv[1]), Translate(argv[2]));
+	 TKCreate(Translate(argv[1]), Translate(argv[2]));
 
-	//TKCreate(argv[1], argv[2]);
-
-
-	indexPointer = tokenizer.input;
+	indexPointer = tokenizer.input; //indexPointer now holds the input string to be used in while loop
 	char* String;
 
-		while (indexPointer != '\0'){ //we decrease tokenizer.input as we call tkgetNextToken
+		while (indexPointer != '\0'){ //We traverse tokenizer.input with indexPointer as we call TKGetNextToken
 	
 		String = TranslateHexString(TKGetNextToken(&tokenizer)); 
 	
-		if(strlen(String) > 0){
+		if(strlen(String) > 0){ //ensure we do not print blank tokens
 	
 			printf("'%s'\n", String);
 		
@@ -425,7 +432,7 @@ int main(int argc, char **argv) {
 		free(String);
 	}
 
-	TKDestroy(&tokenizer);
+		TKDestroy(&tokenizer);
 
 
 
