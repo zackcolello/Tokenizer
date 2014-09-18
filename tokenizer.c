@@ -27,10 +27,6 @@ char *TranslateHexString (char *HexString);
 
 char *indexPointer; //to be used to track where tokens are in the second argument
 
-
-
-//TokenizerT tokenizer;
-
 /*
  *  * TKCreate creates a new TokenizerT object for a given set of separator
  *   * characters (given as a string) and a token stream (given as a string).
@@ -56,19 +52,8 @@ TokenizerT *TKCreate(char *separators, char *ts) {
 	temptok->delimiters = (char*) malloc(SeparatorSize +1);
 	temptok->input = (char*) malloc(StringSize +1);
   
-	char* delims, *string;
- 
-	//delims = (char*) malloc(SeparatorSize +1);
-	//string = (char*) malloc(StringSize +1);
-
-
 	strcpy(temptok->delimiters, separators);
 	strcpy(temptok->input, ts);
-
-
-	//temptoktemptok->delimiters = delims;
-	//temptok->input = string;
-
 
 		return temptok;
 }
@@ -82,8 +67,12 @@ TokenizerT *TKCreate(char *separators, char *ts) {
 
 void TKDestroy(TokenizerT *tk) {
 	
-	//free(tokenizer.delimiters);
-//	free(tokenizer.input);
+	free(tk->delimiters);
+	free(tk);
+
+	tk->delimiters = NULL;
+	tk = NULL;
+
 
 }
 
@@ -95,11 +84,11 @@ char *Translate (char *untranslated){
 
 	unsigned char *buff, *translated;
 	int i,k;
-	i=0;
-	k=0;
+	i=0; //Index for untranslated string
+	k=0; //Index for buffer string
 	buff = (char*) malloc(1000);
 	
-	while (untranslated[i]!='\0'){
+	while (untranslated[i]!='\0'){ //Loop until end of untranslated string
 		
 		if (untranslated[i] == '\\'){ //Found backslash, check through list of known escape characters
 
@@ -189,7 +178,6 @@ char *TranslateHexString (char *HexString){
 	int i, j;
 	i = 0; //index for HexString
 	j = 0; //index for BigBuffer
-
 
 	while(HexString[i] != '\0'){	
 
@@ -294,9 +282,7 @@ char *TrimBuffer (char *buffer){
 	char* trimmed;
 	trimmed = (char*) malloc(buffersize +1);
 
-
-
-	while(buffer[i] != '\0'){
+	while(buffer[i] != '\0'){ //loop until end of buffer
 		
 		trimmed[i] = buffer[i];
 		i++;
@@ -323,7 +309,7 @@ char *TrimBuffer (char *buffer){
 
 char *TKGetNextToken(TokenizerT *tk) {
 
-		int i, b, BBIndex;
+	int i, b, BBIndex;
 	BBIndex = 0;
 
 	char c;
@@ -342,11 +328,7 @@ char *TKGetNextToken(TokenizerT *tk) {
 		if(c == '\0'){
 		
 			BigBuffer[BBIndex] = '\0';
-			
-			//indexPointer = BigBuffer[BBIndex];
 			indexPointer = '\0';			
-
-			//tokenizer.input = indexPointer;	
 
 			return TrimBuffer(BigBuffer);
 
@@ -355,20 +337,16 @@ char *TKGetNextToken(TokenizerT *tk) {
 
 		if(b == 0){ //not delimiter, add to BigBuffer
 			
-			//if(c != '\\'){ //skip over "\"
 			BigBuffer[BBIndex] = c;
 			BBIndex++;
-			//}
 
 			
 		}else{ //is delimiter, return now
 
-			
 			indexPointer = &tk->input[i+1];
 			tk->input = indexPointer;
 			BigBuffer[BBIndex] = '\0';
 			
-
 			return TrimBuffer(BigBuffer);
 		}
 
@@ -419,9 +397,6 @@ int main(int argc, char **argv) {
 		printf("please enter two arguments after calling tokinizer: (1) delimiters (2) String to be tokenized.\n");
 		return -1;
 	}
-	printf("%s\n", argv[1]);
-	printf("%s\n", argv[2]);	
-
 
 	tokenizer = TKCreate(Translate(argv[1]), Translate(argv[2]));
 
@@ -430,20 +405,19 @@ int main(int argc, char **argv) {
 
 		while (indexPointer != '\0'){ //We traverse tokenizer.input with indexPointer as we call TKGetNextToken
 	
-		String = TranslateHexString(TKGetNextToken(tokenizer)); 
+			String = TranslateHexString(TKGetNextToken(tokenizer)); 
 
 	
-		if(strlen(String) > 0){ //ensure we do not print blank tokens
+			if(strlen(String) > 0){ //ensure we do not print blank tokens
 	
-			printf("'%s'\n", String);
+				printf("%s\n", String);
 		
-		}		
-		free(String);
-	}
+			}		
+		
+			free(String);
+		}	
 
 		TKDestroy(tokenizer);
 
-
-
-  return 0;
+  	return 0;
 }

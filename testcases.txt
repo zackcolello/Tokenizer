@@ -25,9 +25,27 @@
 	output:
 
 5.	cmd input:	"T\rg" "Big \r \ StrinG\\"
-	you get:	"T\rg" "Big \r \ StrinG\\"
+	you get:	"T\rg" "Big \r \ StrinG\"
 	output:		Bi
 			
 			  StrinG
 
+6.	cmd input:	"\\\\" "\\"
+	you get:	"\\" "\"
+	output:
 
+7.	cmd input:	"\n" "\\hTest\t"
+	you get:	"\n" "\hTest\t"
+	output:		hTest[0x09]
+
+8.	cmd input:	"The rain in \\SpaiN Stay\s M\ainl\y on the Plain" "z"
+	you get:	"The rain in \SpaiN Stay\s M\ainl\y on the Plain" "z"
+	output:		z
+
+9.	cmd input:	"\nA t" "tAt \n"
+	you get:	"\nA t" "tAt \n"
+	output:
+
+10.	cmd input:	"zZ\z" "Can I go \to slEep \now?\\"
+	you get:	"zZ\z" "Can I go \to slEep \now?\"
+	output:		Can I go [0x09]o slEep [0x0a]ow?
