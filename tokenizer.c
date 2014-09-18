@@ -394,7 +394,7 @@ int main(int argc, char **argv) {
 	TokenizerT *tokenizer;
 
 	if (argc != 3){
-		printf("please enter two arguments after calling tokinizer: (1) delimiters (2) String to be tokenized.\n");
+		printf("Please enter two arguments after calling tokenizer: (1) delimiters (2) String to be tokenized.\n");
 		return -1;
 	}
 

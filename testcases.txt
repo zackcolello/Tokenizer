@@ -46,6 +46,11 @@
 	you get:	"\nA t" "tAt \n"
 	output:
 
-10.	cmd input:	"zZ\z" "Can I go \to slEep \now?\\"
+10.	cmd input:	"T" "StRin\G" "Too many Args"
+	you get:	"T" "StRin\G" "Too many Args"	
+	output:		(Error message) Please enter two arguments after
+			calling tokenizer: (1) delimiters (2) String to be tokenized.
+
+11.	cmd input:	"zZ\z" "Can I go \to slEep \now?\\"
 	you get:	"zZ\z" "Can I go \to slEep \now?\"
 	output:		Can I go [0x09]o slEep [0x0a]ow?
